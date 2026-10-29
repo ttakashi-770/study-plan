@@ -71,7 +71,7 @@ h3{font-size:16px;margin:0}
 .tl.in li{animation:rise .5s var(--spring) backwards;animation-delay:calc(var(--i)*60ms)}
 @keyframes rise{from{opacity:0;transform:translateY(22px) scale(.95)}to{opacity:1;transform:none}}
 .dot{flex:0 0 40px;width:40px;height:40px;border:var(--b);border-radius:50%;background:var(--paper);font-size:19px;line-height:1;z-index:1;transition:transform .3s var(--spring),background .2s}
-.dot:active{transform:scale(.85)} .tl li{min-height:62px} .tmn{position:absolute;left:-4px;top:42px;width:48px;text-align:center;font-size:11px;font-weight:900;line-height:17px;color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:999px;z-index:2;pointer-events:none}
+.dot:active{transform:scale(.85)} .tl li{min-height:62px} .tl li.life .it{background:var(--bg)!important;border-color:#D8C7A3!important;opacity:1!important} .tl li.life .dot{background:var(--bg)!important;border-color:#D8C7A3!important} .tl li.life .tag{background:var(--bg)!important;border-color:#D8C7A3!important} .tl li.gap .it{cursor:default} .tl li.gap .dot{display:block} .tmn{position:absolute;left:-4px;top:42px;width:48px;text-align:center;font-size:11px;font-weight:900;line-height:17px;color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:999px;z-index:2;pointer-events:none}
 .tl li.ok .dot{background:var(--green)}
 .tl li.fresh .dot{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}.tl li.fresh .dot span{display:inline-block;animation:chk .5s cubic-bezier(.2,1.4,.4,1)}.tl li.fresh .it{animation:flash .7s ease}
 .chk.fresh i{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
@@ -819,7 +819,19 @@ t=t.replace(/\s[\d.]+h(?=（|$)/,'');
 let u=gd(t,'，');if(u<0){const c=gd(t,'：');if(c>0&&t.slice(c+1).includes('計時'))u=c}
 if(u>0){note.unshift(t.slice(u+1));t=t.slice(0,u)}
 return{cat,hrs,title:t.trim(),note:note.join('・'),subj:subjOf(e),must:cat==='M'||(cat==='P'&&e.includes('計時'))}}
-const tmOf=(ts,k)=>{const wd=new Date(utc(k)).getUTCDay(),f=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');let c=9*60;return ts.map(t=>{const[ok,i]=t.id.split('#'),e=(D.Mr[ok]||[])[+i]||'',x=e.match(/(\d{1,2}):(\d{2})(?:[–-](\d{1,2}):(\d{2}))?/);let s;if(x){s=+x[1]*60+ +x[2];c=Math.max(c,x[3]?+x[3]*60+ +x[4]:s+(e[0]==='Z'?120:Math.round(t.hrs*60)))}else{if(c>=720&&c<780)c=780;if(c>=1080&&c<1140)c=1140;s=c;c=Math.round((c+t.hrs*60)/5)*5}return f(s)})};
+const tmOf=(ts,k)=>{const f=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'),T=/(\d{1,2}):(\d{2})(?:[–-](\d{1,2}):(\d{2}))?/,lab=[],pre={},post=[],late={};let c=9*60,ret=false,cur=0;
+const gp=(a,b,n)=>{if(b!==null&&b-a<5)return;(cur<ts.length?(pre[cur]=pre[cur]||[]):post).push({t:b===null?f(a):f(a)+'–'+f(b),s:f(a),n})};
+const meal=(a,b)=>a<1140&&b>1080?'休息／晚餐':a<780&&b>720?'休息／午餐':'休息';
+ts.forEach((t,i)=>{cur=i;const[ok,ix]=t.id.split('#'),e=(D.Mr[ok]||[])[+ix]||'',x=e.match(T),tp=/台北數位學堂/.test(e),z=e[0]==='Z',tu=z&&/家教/.test(e);
+if(x){const s0=+x[1]*60+ +x[2],en=x[3]?+x[3]*60+ +x[4]:s0+(z?120:Math.round(t.hrs*60/5)*5);
+if(s0>c){gp(c,s0,tp?'準備出門／交通（往台北）':ret?'交通（回家）':tu?(c<1140&&s0>1080?'晚餐／交通（去家教）':'準備／交通（去家教）'):meal(c,s0));if(!tp)ret=false}
+lab.push(f(s0));c=Math.max(c,en);if(tp)ret=true;if(tu){cur=i+1;gp(c,c+60,'休息／交通');c+=60}return}
+if(z){lab.push(f(c));return}
+if(ret&&!/車上/.test(e)){gp(c,c+60,'交通（回家）');c+=60;ret=false}
+if(c>=720&&c<780){gp(c,780,'休息／午餐');c=780}if(c>=1080&&c<1140){gp(c,1140,'休息／晚餐');c=1140}
+const en=Math.round((c+t.hrs*60)/5)*5;if(en>1410){lab.push('改天');late[i]=1;return}
+lab.push(f(c));c=en});cur=ts.length;if(ret)gp(c,null,'交通（回家）');return{lab,pre,post,late}};
+const gapLi=(g,i)=>`<li class="c-Z life gap" style="--i:${i}"><span class="dot" aria-hidden="true"></span><span class="tmn">${g.s}</span><div class="it"><div class="row"><span class="tag t-gray">日常</span></div><p class="ttl">${g.n}</p><div class="note">${g.t}</div></div></li>`;
 const tasksOf=k=>{const own=D.Mr[k].map((e,i)=>({...parse(e),id:k+'#'+i})).filter(t=>!defer[t.id]);const inn=[];Object.keys(defer).forEach(id=>{if(defer[id]!==k)return;const[ok,i]=id.split('#');if(isClosed(ok))return;if(D.Mr[ok]&&D.Mr[ok][+i]!==undefined)inn.push({...parse(D.Mr[ok][+i]),id,from:ok})});return own.concat(inn)};
 const dayStat=k=>{const ts=tasksOf(k);return{n:ts.length,done:ts.filter(t=>ticks[t.id]).length,hrs:ts.reduce((a,t)=>a+t.hrs,0)}};
 const tag=(t,c)=>`<span class="tag t-${c==='coral'?'coral':'gray'}">${t}</span>`;
@@ -892,10 +904,10 @@ ${tpNotice(k)}<div class="card cal"><div class="row sp" style="margin-bottom:10p
 ${tpWkBtn()}<div class="w ${dir||''}">${ts.length?'<h2 class="goalh">今日目標</h2>':''}<div class="card y${st.n&&st.done===st.n?' dn':''}${tpOf(k).length?' tp':''}"><div class="row sp"><div>${tpOf(k).length?'<div class="sub">🚆 要去台北上課</div>':''}<h2 style="margin:0">${label(k)}</h2></div><h2 style="margin:0">${st.hrs.toFixed(1)} 小時</h2></div>
 <div class="bartrack" style="margin:10px 0 6px"><div style="width:${pct}%"></div></div>
 <div class="row sp sub"><span>${st.done===st.n?'✓ ':''}${st.done} / ${st.n} 項完成</span><span>${pct}%</span></div>${nextHint}${loadHint}</div>
-${backlog}<ol class="tl ${anim?'in':''}">${(()=>{const tl=tmOf(ts,k);return ts.map((t,i)=>{const[tn,tc]=TT[t.cat]||['',''];const stale=false;
-return`<li class="c-${t.cat} ${ticks[t.id]?'ok':''}${t.id===lastId&&ticks[t.id]?' fresh':''}" style="--i:${i}"><button class="dot" data-t="${t.id}" aria-pressed="${!!ticks[t.id]}" aria-label="${ticks[t.id]?'取消完成':'標記完成'}：${t.title}">${ticks[t.id]?'<span>✓</span>':''}</button>${tl[i]?`<span class="tmn">${tl[i]}</span>`:''}
+${backlog}<ol class="tl ${anim?'in':''}">${(()=>{const P=tmOf(ts,k),tl=P.lab;return ts.map((t,i)=>{const[tn,tc]=TT[t.cat]||['',''];const stale=false;
+return`${(P.pre[i]||[]).map(g=>gapLi(g,i)).join('')}<li class="c-${t.cat}${t.cat==='Z'?' life':''} ${ticks[t.id]?'ok':''}${t.id===lastId&&ticks[t.id]?' fresh':''}" style="--i:${i}"><button class="dot" data-t="${t.id}" aria-pressed="${!!ticks[t.id]}" aria-label="${ticks[t.id]?'取消完成':'標記完成'}：${t.title}">${ticks[t.id]?'<span>✓</span>':''}</button>${tl[i]?`<span class="tmn">${tl[i]}</span>`:''}
 <div class="it" data-t="${t.id}"><div class="row"><span class="tag t-gray">${t.subj?`<i class="sdot d-${SC[t.subj]}"></i>`:''}${tn}${t.subj?'・'+t.subj:''}</span>${t.must?'<span class="tag must">★ 必做</span>':''}${stale?tag('未完成・已改排','paper'):''}${t.from?tag('原定 '+label(t.from),'paper'):''}${t.hrs?`<span class="hr" style="margin-left:auto">${t.hrs} 小時</span>`:''}</div>
-<p class="ttl">${t.title}</p>${crChip(t)}${tpBtn(t.id)}${timerBox(t)}${t.note?`<div class="note">${t.note}</div>`:''}</div></li>`}).join('')})()}</ol>${movedOut}${notices()}<details class="nc"><summary>使用說明</summary>點圓圈打勾（存在這支手機），每晚 10 點跟我說做完哪幾項。<br>每晚跟我回報今天上到哪、寫了多少題，我會依進度調整後面幾天。沒上完的課往後排，單元複習日會保留，不會被塞課。</details></div>`;
+<p class="ttl">${t.title}</p>${crChip(t)}${tpBtn(t.id)}${timerBox(t)}${t.note?`<div class="note">${t.note}</div>`:''}${P.late[i]?'<div class="note">家教後已超過 23:30，這項建議改到明天或其他日期</div>':''}</div></li>`}).join('')+P.post.map(g=>gapLi(g,ts.length)).join('')})()}</ol>${movedOut}${notices()}<details class="nc"><summary>使用說明</summary>點圓圈打勾（存在這支手機），每晚 10 點跟我說做完哪幾項。<br>每晚跟我回報今天上到哪、寫了多少題，我會依進度調整後面幾天。沒上完的課往後排，單元複習日會保留，不會被塞課。</details></div>`;
 
 const P0=$('#p-today');P0.querySelectorAll('[data-cr]').forEach(b=>b.onclick=e=>{e.stopPropagation();const[x,a,c]=b.dataset.cr.split('|');vib();crPop(x,+a,+c)});
 const rg=$('#rg');if(rg)rg.onclick=()=>{const t=RENEW_PROMPT,m=$('#rgm');const done=ok=>{if(m)m.textContent=ok?'指令已複製，正在開啟 Grok，貼上送出即可。':'複製失敗，請長按下方文字自行複製：'+t};try{navigator.clipboard.writeText(t).then(()=>done(true),()=>done(false))}catch(e){done(false)}window.open('https://grok.com','_blank')};
