@@ -435,6 +435,7 @@ header{background:rgba(245,239,226,.96);-webkit-backdrop-filter:blur(28px) satur
 @keyframes cofbob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-1.5px) rotate(-4deg)}}
 @keyframes cofsteam{0%{opacity:0;transform:translateY(5px)}35%{opacity:.9}100%{opacity:0;transform:translateY(-6px)}}
 .cofov{position:fixed;inset:0;z-index:110;background:rgba(62,58,57,.5);display:flex;align-items:center;justify-content:center;padding:20px;padding-top:calc(20px + env(safe-area-inset-top));padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.cofconf{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .cofbox{position:relative;width:100%;max-width:420px;max-height:100%;overflow:auto;background:#fff;border:3px solid var(--ink);border-radius:24px;box-shadow:4px 4px 0 var(--ink);padding:18px;animation:fadein .25s}
 .cofh{display:flex;align-items:center;gap:8px;margin-bottom:4px}.cofh svg{width:30px;height:30px}.cofh h3{font-size:19px;margin:0}
 .cofx{position:absolute;top:10px;right:12px;width:32px;height:32px;border:2px solid var(--ink);border-radius:50%;background:var(--paper);font:inherit;font-size:14px;line-height:1;cursor:pointer}
@@ -1068,10 +1069,22 @@ const COF_CUP='<svg viewBox="0 0 48 48" aria-hidden="true"><g class="cofst" fill
 function cofRegCard(){return `<div class="card cofreg"><div class="row sp" style="gap:12px;align-items:center"><div class="cofic">${COF_COMBO}</div><div style="flex:1;min-width:0"><h3 style="margin:0 0 2px">報名順利嗎？</h3><div class="note">請我喝杯咖啡、配個點心，一起加油。</div></div></div><button class="btn2 go cofgo" type="button" data-cof="combo" style="margin-top:10px">請我喝咖啡＋點心</button></div>`}
 const BMC_URL='' /* 隱藏中，原連結 https://buymeacoffee.com/ttakashi770 */,KOFI_URL='https://ko-fi.com/ttakashi770';
 const PAYPAL_URL='https://www.paypal.me/jungHsuanliu'; // 填入 PayPal 連結即會顯示 PayPal 按鈕（清空即隱藏）
+function cofConfetti(o){try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+const c=document.createElement('canvas');c.className='cofconf';c.setAttribute('aria-hidden','true');o.insertBefore(c,o.firstChild);
+const dpr=Math.min(window.devicePixelRatio||1,2),W=innerWidth,H=innerHeight;c.width=W*dpr;c.height=H*dpr;const x=c.getContext('2d');x.scale(dpr,dpr);
+const col=['#E8833A','#2E7BA8','#F5C842','#B9A3DB','#9CC88A','#F0A97A'],P=[];
+const fab=document.querySelector('.cofab'),r=fab&&fab.getBoundingClientRect(),src=[[W/2,H*.42]];if(r&&r.width)src.push([r.left+r.width/2,r.top+r.height/2]);
+for(let i=0;i<110;i++){const [sx,sy]=src[i%src.length],side=sx>W*.7,a=side?(Math.PI+(Math.random()-.5)*1.6-.5):(-Math.PI/2+(Math.random()-.5)*2.6),v=7+Math.random()*9;
+P.push({x:sx,y:sy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-(side?3:2),w:6+Math.random()*6,h:4+Math.random()*5,r:Math.random()*6.28,vr:(Math.random()-.5)*.35,t:Math.random()*6.28,c:col[i%col.length],k:Math.random()<.3})}
+const t0=performance.now(),D=2600;
+const f=now=>{if(!c.isConnected)return;const e=now-t0;x.clearRect(0,0,W,H);const al=e>D-700?Math.max(0,(D-e)/700):1;x.globalAlpha=al;
+for(const p of P){p.vx*=.985;p.vy=p.vy*.985+.32;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.t+=.12;const sc=Math.abs(Math.cos(p.t));
+x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;if(p.k){x.beginPath();x.arc(0,0,p.h*.6,0,6.28);x.fill()}else x.fillRect(-p.w/2,-p.h*sc/2,p.w,p.h*sc);x.restore()}
+if(e<D)requestAnimationFrame(f);else c.remove()};requestAnimationFrame(f)}catch(e){}}
 function openCof(){if(document.querySelector('.cofov'))return;const o=document.createElement('div');o.className='cofov';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
 const ln=(u,c,t)=>u?`<a class="btn2 cofgo ${c}" href="${u}" target="_blank" rel="noopener">${t}</a>`:'';
 o.innerHTML=`<div class="cofbox"><button class="cofx" type="button" aria-label="關閉">${ICO.x}</button><div class="cofh">${COF_CUP}<h3>請我喝杯咖啡</h3></div><p class="note">你的一杯咖啡，是這本手帳繼續更新的動力。</p>${ln(BMC_URL,'cofbmc',ICO.cup+' Buy Me a Coffee')}${ln(KOFI_URL,'cofkofi','Ko-fi')}${PAYPAL_URL?`<div class="cofpprow"><span>PayPal</span>${[5,10,20].map(n=>`<a class="cofamt" href="${PAYPAL_URL}/${n}USD" target="_blank" rel="noopener">$${n}</a>`).join('')}</div>`:''}</div>`;
-document.body.appendChild(o);const close=()=>{o.remove();document.removeEventListener('keydown',esc)},esc=e=>{if(e.key==='Escape')close()};
+document.body.appendChild(o);cofConfetti(o);const close=()=>{o.remove();document.removeEventListener('keydown',esc)},esc=e=>{if(e.key==='Escape')close()};
 o.querySelector('.cofx').onclick=close;o.onclick=e=>{if(e.target===o)close()};document.addEventListener('keydown',esc);o.querySelector('.cofx').focus()}
 const COFHK='study-plan-116-cof-hidden-v1';
 function cofInit(){document.addEventListener('click',e=>{const x=e.target.closest('[data-cof]');if(x){try{vib()}catch(er){}openCof(x.dataset.cof)}});const rs=document.getElementById('cofrs');if(rs)rs.addEventListener('click',()=>{try{localStorage.removeItem(COFHK)}catch(e){}document.querySelectorAll('.cofab,.cofbub').forEach(x=>x.remove());rs.hidden=true;try{vib()}catch(e){}cofMake(true)});if(ls.get(COFHK)==='1'){if(rs)rs.hidden=false;return}cofMake()}
