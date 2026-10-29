@@ -1072,13 +1072,14 @@ const PAYPAL_URL='https://www.paypal.me/jungHsuanliu'; // 填入 PayPal 連結�
 function cofConfetti(o){try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
 const c=document.createElement('canvas');c.className='cofconf';c.setAttribute('aria-hidden','true');o.insertBefore(c,o.firstChild);
 const dpr=Math.min(window.devicePixelRatio||1,2),W=innerWidth,H=innerHeight;c.width=W*dpr;c.height=H*dpr;const x=c.getContext('2d');x.scale(dpr,dpr);
-const col=['#E8833A','#2E7BA8','#F5C842','#B9A3DB','#9CC88A','#F0A97A'],P=[];
+const col=['#E8833A','#2E7BA8','#F5C842','#B9A3DB','#9CC88A','#F0A97A'],P=[],R=Math.random;
 const fab=document.querySelector('.cofab'),r=fab&&fab.getBoundingClientRect(),src=[[W/2,H*.42]];if(r&&r.width)src.push([r.left+r.width/2,r.top+r.height/2]);
-for(let i=0;i<110;i++){const [sx,sy]=src[i%src.length],side=sx>W*.7,a=side?(Math.PI+(Math.random()-.5)*1.6-.5):(-Math.PI/2+(Math.random()-.5)*2.6),v=7+Math.random()*9;
-P.push({x:sx,y:sy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-(side?3:2),w:6+Math.random()*6,h:4+Math.random()*5,r:Math.random()*6.28,vr:(Math.random()-.5)*.35,t:Math.random()*6.28,c:col[i%col.length],k:Math.random()<.3})}
-const t0=performance.now(),D=2600;
-const f=now=>{if(!c.isConnected)return;const e=now-t0;x.clearRect(0,0,W,H);const al=e>D-700?Math.max(0,(D-e)/700):1;x.globalAlpha=al;
-for(const p of P){p.vx*=.985;p.vy=p.vy*.985+.32;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.t+=.12;const sc=Math.abs(Math.cos(p.t));
+const mk=(sx,sy,vx,vy,b)=>P.push({x:sx,y:sy,vx,vy,w:6+R()*6,h:4+R()*5,r:R()*6.28,vr:(R()-.5)*.3,t:R()*6.28,s:R()*6.28,c:col[P.length%col.length],k:R()<.3,b});
+for(let i=0;i<100;i++){const [sx,sy]=src[i%src.length],side=sx>W*.7,a=side?(Math.PI+(R()-.5)*1.6-.5):(-Math.PI/2+(R()-.5)*2.6),v=6+R()*8;mk(sx,sy,Math.cos(a)*v,Math.sin(a)*v-(side?3:2),0)}
+for(let i=0;i<45;i++)mk(R()*W,-10-R()*60,(R()-.5)*1.5,1+R()*1.5,1300+R()*1200);
+const t0=performance.now(),D=6000,FD=1200;let last=t0;
+const f=now=>{if(!c.isConnected)return;const e=now-t0,k=Math.min(2,(now-last)/16.7);last=now;x.clearRect(0,0,W,H);x.globalAlpha=e>D-FD?Math.max(0,(D-e)/FD):1;
+for(const p of P){if(e<p.b)continue;p.vx*=Math.pow(.97,k);p.vy=Math.min(p.vy*Math.pow(.97,k)+.16*k,2.6);p.s+=.05*k;p.x+=(p.vx+Math.sin(p.s)*.8)*k;p.y+=p.vy*k;p.r+=p.vr*k;p.t+=.1*k;if(p.y>H+20)continue;const sc=Math.abs(Math.cos(p.t));
 x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;if(p.k){x.beginPath();x.arc(0,0,p.h*.6,0,6.28);x.fill()}else x.fillRect(-p.w/2,-p.h*sc/2,p.w,p.h*sc);x.restore()}
 if(e<D)requestAnimationFrame(f);else c.remove()};requestAnimationFrame(f)}catch(e){}}
 function openCof(){if(document.querySelector('.cofov'))return;const o=document.createElement('div');o.className='cofov';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
