@@ -675,7 +675,7 @@ details.fold>summary{transition:none}
 .tpwl li ul.lesl{margin:6px 0 0;padding:0;list-style:none}
 .tpwl li ul.lesl li{border:0;background:none;border-radius:0;margin:0;padding:2px 0 2px 16px;position:relative;font-size:14px;line-height:1.5}
 .tpwl li ul.lesl li::before{content:"・";position:absolute;left:2px}
-.lsv{display:flex;flex-direction:column;gap:3px;margin-top:4px}.lsr{display:flex;justify-content:space-between;gap:10px;align-items:baseline;line-height:1.5}.lsr>span:first-child{flex:1;min-width:0;overflow-wrap:anywhere}.lpn{margin-left:6px;font-size:12px;color:var(--mute);font-weight:400}.lsh{font-size:12.5px;font-weight:700;margin-top:6px;color:var(--ink)}.lsh:first-child{margin-top:0}.lmeta{margin-top:6px;padding:6px 9px;border-radius:8px;background:#F1EBDD;font-size:12.5px;color:var(--mute);line-height:1.55}.lmeta div+div{margin-top:2px}.lmeta b{font-weight:600}.tpr{display:flex;justify-content:space-between;gap:10px;align-items:baseline}</style>
+.lsv{display:flex;flex-direction:column;gap:3px;margin-top:4px}.lsr{display:flex;justify-content:space-between;gap:10px;align-items:baseline;line-height:1.5}.lsr>span:first-child{flex:1;min-width:0;overflow-wrap:anywhere}.lpn{margin-left:6px;font-size:12px;color:var(--mute);font-weight:400}.lsh{font-size:12.5px;font-weight:700;margin-top:6px;color:var(--ink)}.lsh:first-child{margin-top:0}.lmeta{margin-top:6px;padding:6px 9px;border-radius:8px;background:#F1EBDD;font-size:12.5px;color:var(--mute);line-height:1.55}.lmeta div+div{margin-top:2px}.lmeta b{font-weight:600}.tpr{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.cofab,.cofbub{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}.cofab svg{pointer-events:none}.cofab.cofbye{transition:transform .2s ease-in,opacity .2s ease-in!important;transform:scale(.2)!important;opacity:0!important;pointer-events:none!important}.cofbub.cofbye{transition:transform .2s ease-in,opacity .2s ease-in!important;transform:translate(0,-50%) scale(.2)!important;opacity:0!important;pointer-events:none!important}</style>
 </head>
 <body>
 <header><div class="bar">
@@ -1072,11 +1072,22 @@ $o('.cofx').onclick=close;o.onclick=e=>{if(e.target===o)close()};document.addEve
 $o('#cofgo').href=SPONSOR.url;$o('#cofgo').onclick=()=>{const m=$o('#cofmsg'),t='嗨👋～HH\n\n想請你喝'+items().map(k=>SPONSOR.name[k]+' ×'+q[k]).join('、')+'\n\n一共 '+total()+' 🪙',ok=()=>{m.textContent='✅ 餐券和訊息已複製！到對話貼上送出，再用 LINE Pay 轉帳 '+total()+' 🪙'},fb=()=>{try{navigator.clipboard.writeText(t).then(()=>{m.textContent='文字已複製，餐券請長按上方圖片存圖後一起傳'},()=>{m.textContent='請長按複製：'+t})}catch(e){m.textContent='請長按複製：'+t}};
 try{navigator.clipboard.write([new ClipboardItem({'text/plain':new Blob([t],{type:'text/plain'}),'image/png':new Promise(r=>lastC.toBlob(r,'image/png'))})]).then(ok,fb)}catch(e){fb()}};
 COIN_IMG.complete||COIN_IMG.addEventListener('load',draw);draw();$o('.cofx').focus()}
-function cofInit(){const b=document.createElement('button');b.className='cofab';b.type='button';b.setAttribute('aria-label','請我喝咖啡');b.innerHTML=COF_CUP;document.body.appendChild(b);
+const COFHK='study-plan-116-cof-hidden-v1';
+function cofInit(){document.addEventListener('click',e=>{const x=e.target.closest('[data-cof]');if(x){try{vib()}catch(er){}openCof(x.dataset.cof)}});if(ls.get(COFHK)==='1')return;const b=document.createElement('button');b.className='cofab';b.type='button';b.setAttribute('aria-label','請我喝咖啡');b.innerHTML=COF_CUP;document.body.appendChild(b);
 const bub=document.createElement('div');bub.className='cofbub';bub.textContent='可以請我喝咖啡喔！';document.body.appendChild(bub);let gone=false;
 const tick=d=>setTimeout(()=>{if(gone)return;if(document.querySelector('.cofov,.rnpop')){tick(3000);return}bub.classList.add('on');setTimeout(()=>bub.classList.remove('on'),5500);tick(30000)},d);tick(1500);
-b.onclick=()=>{gone=true;bub.classList.remove('on');try{vib()}catch(e){}openCof()};bub.onclick=()=>{gone=true;bub.classList.remove('on');openCof()};
-document.addEventListener('click',e=>{const x=e.target.closest('[data-cof]');if(x){try{vib()}catch(er){}openCof(x.dataset.cof)}})}
+let bye=false;const close=()=>{if(bye)return;bye=gone=true;try{vib()}catch(e){}b.classList.add('cofbye');bub.classList.add('cofbye');ls.set(COFHK,'1');setTimeout(()=>{b.style.display='none';bub.style.display='none'},210)};
+const gest=(el,tap)=>{let lt=null,lp=false,last=0,one=null,sx=0,sy=0,tch=0;const st=(x,y)=>{lp=false;sx=x;sy=y;clearTimeout(lt);lt=setTimeout(()=>{lp=true;close()},500)};
+const tp=()=>{const n=Date.now();if(n-last<320){last=0;clearTimeout(one);close();return}last=n;clearTimeout(one);one=setTimeout(()=>{if(!bye)tap()},320)};
+el.addEventListener('touchstart',e=>{tch=Date.now();e.preventDefault();const t=e.touches[0];st(t.clientX,t.clientY)},{passive:false});
+el.addEventListener('touchmove',e=>{const t=e.touches[0];if(Math.hypot(t.clientX-sx,t.clientY-sy)>10)clearTimeout(lt)},{passive:true});
+el.addEventListener('touchend',e=>{e.preventDefault();clearTimeout(lt);if(lp||bye)return;tp()},{passive:false});
+el.addEventListener('touchcancel',()=>clearTimeout(lt));
+el.addEventListener('mousedown',e=>{if(Date.now()-tch<800)return;st(e.clientX,e.clientY)});
+['mouseup','mouseleave'].forEach(v=>el.addEventListener(v,()=>clearTimeout(lt)));
+el.addEventListener('contextmenu',e=>e.preventDefault());
+el.addEventListener('click',e=>{e.preventDefault();if(Date.now()-tch<800||lp||bye){lp=false;return}if(e.detail===0){tap();return}tp()})};
+gest(b,()=>{gone=true;bub.classList.remove('on');try{vib()}catch(e){}openCof()});gest(bub,()=>{gone=true;bub.classList.remove('on');openCof()})}
 function renderReg(){const rows=D.OF.map(s=>{let st,c,o=9;if(!s.open){st='待公告';c='paper';o=5}else{const a=daysTo(...s.open),b=daysTo(...s.close);
 if(b<0){st='已截止';c='paper';o=6}else if(a>0){st=a+' 天後開始';c='aqua';o=3+a/1e3}else{st=b===0?'今天截止':'報名中・剩 '+b+' 天';c='coral';o=b/1e3}}return{s,st,c,o}}).sort((x,y)=>x.o-y.o);
 $('#p-reg').innerHTML=regHead()+
