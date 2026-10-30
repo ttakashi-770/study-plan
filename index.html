@@ -577,7 +577,7 @@ details.hrs[open]>summary::after{transform:rotate(180deg)}
 .day{position:relative}.day.tp b::after{content:none}
 .day.tp{padding-bottom:12px}
 .day.tp::after{content:'';position:absolute;left:50%;bottom:4px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#2E7BA8}
-.day.today{padding-bottom:12px}.day.today::after{content:'';position:absolute;left:50%;bottom:3px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#E8833A;box-shadow:0 0 0 1.5px #fff}
+.day.tp::after{bottom:3px;width:8px;height:8px;margin-left:-4px;background:#E8833A;box-shadow:0 0 0 1.5px #fff}
 /* 今日大卡：標題列不換行、提示框只有一塊時保留完整邊框 */
 .card.y>.row.sp{flex-wrap:nowrap!important}
 .card.y>.row.sp>div{flex:1;min-width:0}
@@ -911,7 +911,7 @@ const mon=utc(k)-((new Date(utc(k)).getUTCDay()+6)%7)*DAY;
 const first=keys[0],last=keys[keys.length-1];
 const days=[0,1,2,3,4,5,6].map(i=>{const dk=fk(mon+i*DAY),ok=keys.includes(dk);let c='day';
 if(!ok)return`<button class="day" disabled><small>${'一二三四五六日'[i]}</small><b>${+dk.slice(3)}</b></button>`;
-const s=dayStat(dk);if(dk===nowKey())c+=' today';if(s.n&&s.done===s.n)c+=' done';if(dk===k)c+=' sel';
+const s=dayStat(dk);if(dk===nowKey())c+=' today';if(tkbOn(dk).length)c+=' tp';if(s.n&&s.done===s.n)c+=' done';if(dk===k)c+=' sel';
 return`<button class="${c}" data-d="${dk}" aria-label="${label(dk)}"><small>${'一二三四五六日'[i]}</small><b>${+dk.slice(3)}</b></button>`}).join('');
 const [y,m]=ymd(k);
 const rem=ts.filter(t=>!ticks[t.id]&&t.cat!=='Z'),remH=rem.reduce((a,t)=>a+t.hrs,0);
