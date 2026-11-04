@@ -897,7 +897,7 @@ function tickCd(){let ms=EXAM-Date.now();const past=ms<=0;if(past)ms=0;const ds=
 const real=ts=>ts.filter(t=>t.cat!=='Z'),tk=pickDay(),ti=keys.indexOf(tk),tt=real(tasksOf(tk)),td=tt.filter(t=>ticks[t.id]).length,dn=tt.length?td+'/'+tt.length:'休息';
 let sk=td>0?1:0;for(let i=ti-1;i>=0;i--){const r=real(tasksOf(keys[i]));if(!r.length)continue;if(r.some(t=>ticks[t.id]))sk++;else break}
 $('#cd').innerHTML=`<div><b>${d}</b><span>天後考試</span></div><div><b>${dn}</b><span>今日完成</span></div><div><b>${sk}</b><span>天連續打卡</span></div>`;
-$('#cdnote').innerHTML='<div class="nc" id="stl" style="margin-bottom:6px;font-size:14px">11/3（二）狀態：目前落後約 5.6 小時（已全部重排進 11/3–11/7）｜昨天 11/2：部分完成（晚上 TKB 第4堂有去、看完課程11–12；白天 3 項未回報，算沒做）</div>'+regBanner()}
+$('#cdnote').innerHTML='<div class="nc" id="stl" style="margin-bottom:6px;font-size:14px">11/4（三）狀態：目前落後約 7.4 小時（已全部重排進後面幾天）｜昨天 11/3：部分完成（GPT 資結 Heap L5、Disjoint Sets L1–L3 都過了；線代 04-01–05-01 沒回報，移到 11/7 下午）</div>'+regBanner()}
 const WSVG='<svg class="wi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 22 20H2z" fill="#D9532B" stroke="#D9532B" stroke-width="2" stroke-linejoin="round"/><path d="M12 9.5v5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.3" r="1.3" fill="#fff"/></svg>';
 const hsrD=()=>daysTo(2026,11,11);
 const hsrTxt=d=>d===0?'今天到期':'還有 '+d+' 天';
