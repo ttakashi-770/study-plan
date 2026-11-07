@@ -809,7 +809,7 @@ const DKEY='study-plan-116-defer-v1';let defer={};try{defer=JSON.parse(ls.get(DK
 {const cd=dfDec(CKS.get('spdf'));Object.keys(cd).forEach(k=>{if(!(k in defer))defer[k]=cd[k]})}
 const putD=()=>{ls.set(DKEY,JSON.stringify(defer));CKS.set('spdf',dfEnc(defer))};
 const saveD=()=>{putD();try{tickCd()}catch(e){}};
-const CLOSED='10-28',isClosed=k=>+k.slice(0,2)>=10&&k<=CLOSED;
+const CLOSED='11-06',isClosed=k=>+k.slice(0,2)>=10&&k<=CLOSED;
 ;(function(){let ch=0;Object.keys(D.Mr).forEach(k=>{if(!isClosed(k))return;D.Mr[k].forEach((e,i)=>{const id=k+'#'+i;if(e[0]!=='Z'&&!ticks[id]){ticks[id]=true;ch=1}})});Object.keys(defer).forEach(id=>{if(isClosed(id.split('#')[0])){delete defer[id];ch=1}});putT();putD()})();
 const vib=()=>{try{navigator.vibrate&&navigator.vibrate(10)}catch(e){}};
 /* ===== 計時器 ===== */
