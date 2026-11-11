@@ -1400,10 +1400,10 @@ if(st==null)continue;if(utc(k)===t0&&en<=nm+30)continue;return{k,st,en,pl,late:u
 return null}
 function toast(x){const d=document.createElement('div');d.className='tpt on';d.textContent=x;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
 document.addEventListener('click',ev=>{const b=ev.target.closest('#hsrgo');if(!b)return;try{vib()}catch(_){}
-const r=find();if(!r){toast('找不到之後要去台北的上課時間');return}
+const r=find();if(!r){window.open('https://irs.thsrc.com.tw/IMINT/?locale=tw','_blank','noopener');toast('還沒排去台北的日子，先幫你打開高鐵訂票頁');return}
 const arr=r.st-50,dep=arr-35,back=r.en+40;
 const msg='Nori，請幫我訂高鐵來回（新竹⇄台北）：\n日期：'+label(r.k)+'\n去程：新竹→台北，'+F(r.st)+' 上課，請選 '+F(arr)+' 前抵達台北站的班次（約 '+F(dep)+' 前從新竹發車）'+(r.late?'；時間已緊，請選最近一班':'')+'\n回程：台北→新竹，'+F(r.en)+' 下課，請選 '+F(back)+' 之後最近的班次\n座位：標準車廂、靠窗優先\n請先列出可選車次與票價讓我確認，再幫我訂；付款資訊我自己輸入。';
-window.open('https://irs.thsrc.com.tw/IMINT/','_blank','noopener');
+window.open('https://irs.thsrc.com.tw/IMINT/?locale=tw','_blank','noopener');
 const o=document.createElement('div');o.className='rnpop';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
 o.innerHTML='<div class="rnbox"><button class="rnx" type="button" data-x aria-label="關閉">'+ICO.x+'</button><h3>'+ICO.train+' 高鐵來回・'+label(r.k)+'</h3><p class="note" id="hsrm">正在複製訂票需求…</p><div class="hsrp"></div><div class="rsbt" style="margin-top:12px"><button class="btn2 tpwgo" type="button" data-cp>再複製一次</button><button class="btn2 tpwgo rsrv" type="button" data-x>關閉</button></div></div>';
 o.querySelector('.hsrp').textContent=msg;document.body.appendChild(o);
