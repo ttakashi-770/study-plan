@@ -942,7 +942,7 @@ function tickCd(){let ms=EXAM-Date.now();const past=ms<=0;if(past)ms=0;const ds=
 const real=ts=>ts.filter(t=>t.cat!=='Z'),tk=pickDay(),ti=keys.indexOf(tk),tt=real(tasksOf(tk)),td=tt.filter(t=>ticks[t.id]).length,dn=tt.length?td+'/'+tt.length:'休息';
 let sk=td>0?1:0;for(let i=ti-1;i>=0;i--){const r=real(tasksOf(keys[i]));if(!r.length)continue;if(r.some(t=>ticks[t.id]))sk++;else break}
 $('#cd').innerHTML=`<div><b>${d}</b><span>天後考試</span></div><div><b>${dn}</b><span>今日完成</span></div><div><b>${sk}</b><span>天連續打卡</span></div>`;
-$('#cdnote').innerHTML='<div class="nc" id="stl" style="margin-bottom:6px;font-size:14px">11/13（五）14:55 更新：推薦加報系所已對 116 簡章核實主要項目（中央軟體工程／AI 各1名、陽明交大聯招填志願、台大 AI 研究所屬甄試非考試）｜11/13（五）08:40 更新：昨天（11/12）發燒七項全未做，今天輕量恢復，落後約 39.4 小時｜11/12（四）23:00 更新：報名分頁加上推薦加報系所｜11/12（四）22:05 更新：今天發燒休息，11/13 起先輕量恢復｜11/12 七項 7h 全未做（發燒）記未完成，落後約 39.4 小時（約 6 天）｜11/13（五）先輕量恢復約 2h：GPT 資結：CH9-1、計組：複習效能評估（12:15 前）；19:00 固定家教｜其餘 CH9 與 CH5 錯題重考、Heap 題庫、CH9 題庫先往後挪｜TKB 資結 下一個課程17（未排；13–15 跳過）｜距清大 1/26 還有 74 天｜資結順序 CH5→CH9→CH7→CH6｜台大、陽明交大、中山 116 簡章已出；陽明交大資科甲 1/27 與中正同日撞堂</div>'+regBanner()}
+$('#cdnote').innerHTML='<div class="nc" id="stl" style="margin-bottom:6px;font-size:14px">11/14（六）08:45 更新：昨天（11/13）未回報，GPT 資結 CH9-1、計組效能評估記未完成，落後約 41.4 小時（約 6 天）｜今天 10:00–12:00 家教後輕量：GPT 資結 CH9-2、CH9-3、線代 05-02（13:00–16:30）；19:00 彈性家教｜距清大 1/26 還有 73 天｜11/13（五）08:40 更新：昨天（11/12）發燒七項全未做，落後約 39.4 小時｜11/12（四）23:00 更新：報名分頁加上推薦加報系所（待官網核實）｜11/12（四）22:05 更新：今天發燒休息，11/13 起先輕量恢復｜11/12 七項 7h 全未做（發燒）記未完成，落後約 39.4 小時（約 6 天）｜11/13（五）先輕量恢復約 2h：GPT 資結：CH9-1、計組：複習效能評估（12:15 前）；19:00 固定家教｜其餘 CH9 與 CH5 錯題重考、Heap 題庫、CH9 題庫先往後挪｜TKB 資結 下一個課程17（未排；13–15 跳過）｜距清大 1/26 還有 74 天｜資結順序 CH5→CH9→CH7→CH6｜台大、陽明交大、中山 116 簡章已出；陽明交大資科甲 1/27 與中正同日撞堂</div>'+regBanner()}
 const WSVG='<svg class="wi" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 22 20H2z" fill="#D9532B" stroke="#D9532B" stroke-width="2" stroke-linejoin="round"/><path d="M12 9.5v5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.3" r="1.3" fill="#fff"/></svg>';
 const hsrD=()=>daysTo(2026,11,11);
 const hsrTxt=d=>d===0?'今天到期':'還有 '+d+' 天';
@@ -1319,29 +1319,30 @@ const warn=ico('<path d="M12 4 21 19.5H3z"/><path d="M12 10v4.2M12 16.9v.1"/>');
 const tg=(t,c)=>`<span class="tag t-${c}">${t}</span>`;
 const item=(name,subj,tags)=>`<li><div class="rn1">${name}</div>${subj?`<div class="rn2">${subj}</div>`:''}<div class="lg">${tags}</div></li>`;
 const a1=[
-item('陽明交大 資訊聯招（資安甲/乙、網工、智慧計算等）','同考資結與演算法、線代與離散、計算機系統；報名填 1–8 志願一次考',tg('6/6 重疊','green')+tg('填志願','aqua')),
-item('陽明交大 數據科學與工程研究所（聯招志願）','只採計資結與演算法、線代與離散（兩科）',tg('4/6 重疊','aqua')+tg('聯招','gray')),
-item('台大 資訊網路與多媒體研究所','英文(A)、計算機結構與作業系統、資結與演算法（無口試）',tg('4/6 重疊','aqua')+tg('＋英文','yellow')),
-item('台大 資工＋人工智慧碩士班聯招','同考英文、數學(線代+離散)、計結與OS、資結演算法；可加選 AI 碩士班志願（一般生 6 名）',tg('6/6 重疊','green')+tg('聯招志願','aqua')),
-item('中山 資工系資訊安全碩士班','作業系統（含20%資安）、離散數學與演算法（與甲組考科不同）',tg('3/6 重疊','yellow')+tg('＋資安','yellow')),
-item('政大 資訊安全碩士學位學程','筆試50%：計算機數學（離散60%、線代40%）＋資料審查50%',tg('2/6 重疊','paper')+tg('＋書審','yellow')),
-item('中央 資工系軟體工程碩士班、AI 碩士班','與資工類聯招同三科；各僅一般生 1 名；報名 11/17 09:00 起',tg('6/6 重疊','green')+tg('各1名','yellow')),
-item('中興 資工系乙組（AI／資安）','離散與線代、資訊系統（OS、演算法、資結、資安概論）；一般生 4 名',tg('5/6 重疊','aqua')+tg('＋資安','yellow'))
+item('陽明交大 資訊安全研究所甲/乙組','資料結構與演算法、線代與離散、計算機系統',tg('6/6 重疊','green')),
+item('陽明交大 網路工程研究所','同上',tg('6/6 重疊','green')),
+item('陽明交大 智慧計算與科技研究所','同上',tg('6/6 重疊','green')),
+item('陽明交大 數據科學與工程研究所','資結與演算法、線代與離散',tg('4/6 重疊','aqua')),
+item('台大 資訊網路與多媒體研究所','資結與演算法、計結與作業系統、英文(A)',tg('4/6 重疊','aqua')+tg('＋英文','yellow')),
+item('中山 資工系資訊安全碩士班','作業系統（含20%資安）、離散數學與演算法',tg('3/6 重疊','yellow')+tg('＋資安','yellow')),
+item('中山 電機系丙組（人工智慧與網路）','資料結構、離散數學',tg('2/6 重疊','paper')),
+item('政大 資訊安全碩士學位學程','計算機數學（離散60%、線代40%）＋資料審查',tg('2/6 重疊','paper')+tg('＋書審','yellow')),
+item('中央 資工系軟體工程碩士班、AI 碩士班','資結與演算法、線代與離散、作業系統與計組',tg('6/6 重疊','green')+tg('屬資工系','gray')),
+item('中興 資工系乙組（AI／資安）','離散與線代、資訊系統（OS、演算法、資結、資安概論）',tg('5/6 重疊','aqua')+tg('＋資安','yellow'))
 ].join('');
 const a2=[
-item('台大 資料科學碩士學位學程','英文、工程數學（線代＋機率統計）、資結演算法＋口試（需補機率統計）',tg('筆試＋口試','yellow')+tg('＋機率','yellow')),
-item('清大 資訊安全研究所、醫學資訊碩士學位學程','116 考試入學無筆試，資料審查＋口試',tg('無筆試','green')+tg('審查','aqua')),
-item('成大 人工智慧科技、智慧運算、醫學資訊等','書審＋面試（無筆試為主；報名前再對分則）',tg('書審＋面試','aqua')),
-item('台大 人工智慧研究所（甄試管道）','甄試：書審＋口試，不是考試入學加報；116 甄試時程已過',tg('甄試','paper')+tg('非考試','yellow'))
+item('台大 人工智慧研究所（116 新設）','無筆試，書審40%、口試60%，正取12名',tg('無筆試','green')+tg('書審＋口試','aqua')),
+item('台大 資料科學碩士學位學程','英文、工程數學（線代＋機率統計）、資結演算法＋口試',tg('筆試＋口試','yellow')+tg('＋英文','yellow')),
+item('清大 資訊安全研究所、醫學資訊碩士學位學程','116 無筆試，審查',tg('無筆試','green')+tg('審查','aqua')),
+item('成大 人工智慧科技、智慧運算、醫學資訊','書審＋面試',tg('書審＋面試','aqua'))
 ].join('');
-return `<div class="card recbox"><h2>${rec}推薦加報系所（已核實主要項目）</h2>
-<p class="note">除了已列的資工系所，以下是考科跟你六科較接近、也可考慮加報的系所。主要項目已對 116 簡章核實；其餘見下方提醒。</p>
+return `<div class="card recbox"><h2>${rec}推薦加報系所（ChatGPT 建議，待官網核實）</h2>
+<p class="note">除了已列的資工系所，以下是考科跟你六科較接近、也可考慮加報的系所。部分資料待官網核實。</p>
 <div class="rh">${pen}第一層（考科跟六科重疊高、筆試為主）</div>
 <ul class="list">${a1}</ul>
-<div class="rh">${talk}第二層（不考筆試或少筆試／甄試）</div>
+<div class="rh">${talk}第二層（不考筆試或少筆試，要書審／口試）</div>
 <ul class="list">${a2}</ul>
-<div class="recw">${warn}<div>已核實：中央軟體工程／AI、陽明交大資訊聯招（填志願）、台大網媒／資工＋AI碩士班聯招／資料科學、中山資安、政大資安、中興乙組、清大資安／醫學資訊。中山電機丙、成大細部組別、中正／台北大學／北科大跨系考科仍待對分則。陽明交大 1/27 與中正同日撞堂。建議不要為多報而補電子學；資料科學才需要補機率統計。<a href="https://chatgpt.com/c/6af5c85a-0d68-83ee-b7c1-3cb74bcdd7fa" target="_blank" rel="noopener">ChatGPT 原文 ${ICO.ext}</a></div></div></div>`}
-}
+<div class="recw">${warn}<div>中正、台北大學、北科大的 116 跨系考科尚未核實；部分系所依 115 或公開彙整資料，報名前要用官網分則逐項確認。陽明交大資訊聯招要確認是填志願還是各組獨立報名；注意同日撞堂（陽明交大 1/27 與中正同日）。建議不要為多報而補電子學、統計等新科目。<a href="https://chatgpt.com/c/6af5c85a-0d68-83ee-b7c1-3cb74bcdd7fa" target="_blank" rel="noopener">ChatGPT 原文 ${ICO.ext}</a></div></div></div>`}
 function renderReg(){const rows=D.OF.map(s=>{let st,c,o=9;if(!s.open){st='待公告';c='paper';o=5}else{const a=daysTo(...s.open),b=daysTo(...s.close);
 if(b<0){st='已截止';c='paper';o=6}else if(a>0){st=a+' 天後開始';c='aqua';o=3+a/1e3}else{st=b===0?'今天截止':'報名中・剩 '+b+' 天';c='coral';o=b/1e3}}return{s,st,c,o}}).sort((x,y)=>x.o-y.o);
 $('#p-reg').innerHTML=regHead()+
